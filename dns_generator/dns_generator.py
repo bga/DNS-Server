@@ -15,7 +15,7 @@ def load_zones():
     try:
         files = os.listdir(zones_path)
     except FileNotFoundError:
-        zones_path = "..\Zones"
+        zones_path = "../Zones"
         files = os.listdir(zones_path)
     for zone_file in os.listdir(zones_path):
         with open(os.path.join(zones_path, zone_file), "r") as f:
