@@ -95,6 +95,9 @@ class DNSGen(object):
                 else:
                     state = 1
                     expected_length = byte
+                    if expected_length == 0:
+                        break
+                    x = 0
                 y += 1
             question_type = data[y:y+2]    # after the domain the next 2 bytes are question type
             self.domain = ".".join(domain_parts)
