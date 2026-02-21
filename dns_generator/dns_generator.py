@@ -1,5 +1,6 @@
 import json
 import os
+import struct
 
 QUESTION_TYPES = {
     b"\x00\x01": "a"
@@ -65,8 +66,8 @@ class DNSGen(object):
         return opcode
 
     def _generate_flags(self):
-        flags1 = int(self.QR + self._get_opcode() + self.AA + self.TC + self.RD, 2).to_bytes(1, byteorder="big")
-        flags2 = int(self.RA + self.Z + self.RCODE).to_bytes(1, byteorder="big")
+        flags1 = struct.pack("B", int(self.QR + self._get_opcode() + self.AA + self.TC + self.RD, 2))
+        flags2 = struct.pack("B", int(self.RA + self.Z + self.RCODE))
         return flags1 + flags2
 
     def _get_question_domain_type(self, data):
@@ -122,16 +123,16 @@ class DNSGen(object):
         if record_type == "a":
             resp += b"\x00\x01"
         resp += b"\x00\x01"    # class IN
-        resp += int(record_ttl).to_bytes(4, byteorder="big")    # ttl in bytes
+        resp += struct.pack(">L", int(record_ttl))    # ttl in bytes
         if record_type == "a":
             resp += b"\x00\x04"    # IP length
             for part in record_value.split("."):
-                resp += bytes([int(part)])
+                resp += bytearray([int(part)])
         return resp
 
     def _make_header(self, records_length):
         transaction_id = self._get_transaction_id()
-        ancount = records_length.to_bytes(2, byteorder="big")
+        ancount = struct.pack(">H", records_length)
         if self.format_error == 1:
             self.RCODE = "0001"  # Format error
         elif ancount == b"\x00\x00":
@@ -145,13 +146,13 @@ class DNSGen(object):
             return resp
         for part in domain_name:
             length = len(part)
-            resp += bytes([length])
+            resp += bytearray([length])
             for char in part:
-                resp += ord(char).to_bytes(1, byteorder="big")
+                resp += struct.pack("B", ord(char))
         resp += b"\x00"    # end labels
         if record_type == "a":
-            resp += (1).to_bytes(2, byteorder="big")
-        resp += (1).to_bytes(2, byteorder="big")
+            resp += struct.pack(">H", (1))
+        resp += struct.pack(">H", (1))
         return resp
 
     def _make_answer(self, records, record_type, domain_name):
