@@ -15,5 +15,5 @@ class ClientHandler(threading.Thread):
 
     def run(self):
         resp = self.dns_gen.make_response()
-        self.sock.sendto(self.dns_gen.make_response(), self.client_address)
+        self.sock.sendto(resp, self.client_address)
         print("Request from {0} for {1}".format(self.client_address, self.dns_gen.domain))
