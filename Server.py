@@ -14,6 +14,7 @@ def main():
     print("DNS Listening on {0}:{1} ...".format(IP, PORT))
     while True:
         data, address = sock.recvfrom(650)
+        data = bytearray(data)
         client = ClientHandler(address, data, sock)
         client.run()
 
