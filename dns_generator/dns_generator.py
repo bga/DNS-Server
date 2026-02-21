@@ -112,7 +112,7 @@ class DNSGen(object):
             return {}, "", ""
         qt = ""
         try:
-            qt = QUESTION_TYPES[question_type]
+            qt = QUESTION_TYPES[str(question_type)]
         except KeyError:
             qt = "a"
         zone = get_zone(domain)
