@@ -5,6 +5,7 @@ A Domain Name Server that allows you to use your own domain name IP address mapp
 This could be used within private networks to simplify sharing of resources within the network.
 
 The application requires Python 3.x to run (tested with version 3.6).
+This fork works well with Python 2.7 too
 
 # How to use
 
